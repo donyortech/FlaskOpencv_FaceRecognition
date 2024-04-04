@@ -1,46 +1,58 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
   <div class="container">
-      <a class="navbar-brand" href="#">
-          <img src="{{ url_for('static', filename='img/logo.png') }}" width="70" alt="" class="logo">
-          <span class="ml-2 font-weight-bold">Classroom Attendance System</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/addprsn">Add Personnel</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/fr_page">Face Recognition</a>
-              </li>
-          </ul>
-      </div>
+    <a class="navbar-brand" href="#">
+      <img
+        src="{{ url_for('static', filename='img/logo.png') }}"
+        width="70"
+        alt=""
+        class="logo"
+      />
+      <span class="ml-2 font-weight-bold">Classroom Attendance System</span>
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/"
+            >Home <span class="sr-only">(current)</span></a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addprsn">Add Personnel</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/fr_page">Face Recognition</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
 
 <style>
-  .navbar {
-      border-radius: 0.25rem;
-  }
-
   .navbar-brand .logo {
-      transition: transform 0.5s ease;
+    transition: transform 0.5s ease;
   }
 
   .navbar-brand:hover .logo {
-      transform: scale(1.1);
+    transform: scale(1.1);
   }
 
   .nav-link {
-      transition: color 0.2s ease-in-out;
+    transition: color 0.2s ease-in-out;
   }
 
-  .nav-link:hover, .nav-link:focus {
-      color: #f8f9fa !important; /* Lighter shade for hover effect */
+  .nav-link:hover,
+  .nav-link:focus {
+    color: #f8f9fa !important; /* Lighter shade for hover effect */
   }
 </style>
