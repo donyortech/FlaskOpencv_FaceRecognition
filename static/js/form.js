@@ -6,7 +6,7 @@ $(document).ready(function () {
   function requestData() {
     if ((is_ok = "N")) {
       loadDoc();
-      setTimeout(requestData, 10000);
+      setTimeout(requestData, 1000);
     }
   }
 
