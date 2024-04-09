@@ -7,6 +7,9 @@ import numpy as np
 import os
 import time
 from datetime import date
+from flask import send_file
+import pandas as pd
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -101,6 +104,55 @@ def train_classifier(nbr):
     clf.write("classifier.xml")
 
     return redirect('/')
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Export Today Scan to excel >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+@app.route('/export_to_excel')
+def export_to_excel():
+    query = "SELECT accs_prsn AS 'Person #', prs_name AS 'Name', prs_skill AS 'Class', accs_added AS 'Added' FROM accs_hist JOIN prs_mstr ON accs_hist.accs_prsn = prs_mstr.prs_nbr WHERE accs_date = CURDATE()"
+    mycursor.execute(query)
+    data = mycursor.fetchall()
+    columns = ['Person #', 'Name', 'Class', 'Added']
+
+    # Convert to DataFrame
+    df = pd.DataFrame(data, columns=columns)
+
+    # Create an in-memory bytes buffer for the Excel file
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+
+    # Set the cursor position to the beginning of the stream
+    output.seek(0)
+
+    # Send the file as a download
+    # Send the file as a download
+    return send_file(output,
+                     mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     as_attachment=True, download_name="exported_data.xlsx")
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Export Personnel Data to excel >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+@app.route('/export_personal_data')
+def export_personal_data():
+    query = "SELECT prs_nbr AS 'Person Id', prs_name AS 'Name', prs_skill AS 'Class', prs_active AS 'Active', prs_added AS 'Added' FROM prs_mstr"
+    mycursor.execute(query)
+    data = mycursor.fetchall()
+    columns = ['Person Id', 'Name', 'Class', 'Active', 'Added']
+
+    # Convert to DataFrame
+    df = pd.DataFrame(data, columns=columns)
+
+    # Create an in-memory bytes buffer for the Excel file
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+
+    # Set the cursor position to the beginning of the stream
+    output.seek(0)
+
+    # Send the file as a download
+    return send_file(output,
+                     mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     as_attachment=True, download_name="personal_data.xlsx")
 
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Face Recognition >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -213,13 +265,16 @@ def face_recognition():  # generate frame by frame from camera
 
 @app.route('/')
 def home():
+    # Home page with project information
+    return render_template('index.html')
+
+@app.route('/personnel_data')
+def personnel_data():
     mycursor.execute(
         "select prs_nbr, prs_name, prs_skill, prs_active, prs_added from prs_mstr")
     data = mycursor.fetchall()
 
-    return render_template('index.html', data=data)
-
-
+    return render_template('personnel_data.html', data=data)
 @app.route('/addprsn')
 def addprsn():
     mycursor.execute("select ifnull(max(prs_nbr) + 1, 101) from prs_mstr")

@@ -2,34 +2,71 @@
 <html lang="en">
   <head>
     {% include "head.html" %}
+    <style>
+      body {
+    background: #f5f7fa;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.dataset-section {
+    background-color: #fff; /* Adds contrast to the section */
+    padding: 40px;
+    border-radius: 15px; /* Soften the edges for a modern look */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    margin: 20px auto; /* Centering the section with some margin */
+}
+
+.dataset-header h3 {
+    color: #007bff; /* Primary color for the header to match the theme */
+    margin-bottom: 1rem; /* Space below the header */
+}
+
+.img-thumbnail {
+    border: none; /* Removing the default border */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Adding shadow for depth */
+    border-radius: 10px; /* Rounded corners for the image */
+}
+
+.btn-primary {
+    background-color: #0056b3;
+    border-color: #004085; /* Darker shade for the button border */
+    transition: background-color 0.3s ease-in-out; /* Smooth transition for hover effect */
+}
+
+.btn-primary:hover {
+    background-color: #003875; /* Slightly darker on hover for interaction feedback */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    .dataset-section {
+        padding: 20px;
+    }
+}
+
+    </style>
   </head>
-  <body>
+ <body>
     {% include "navbar.html" %}
 
-    <section class="py-1">
-      <div class="row mt-5">
-        <div class="col-md-3 offset-lg-2">
-          <h3>Generate Dataset {{ prs }}</h3>
-          <hr />
-          <img
-            src="{{ url_for('vidfeed_dataset', nbr=prs) }}"
-            width="100%"
-            class="img-thumbnail"
-          />
+    <section class="dataset-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="dataset-header mb-4">
+                        <h3 class="text-center">Generate Dataset {{ prs }}</h3>
+                        <hr />
+                    </div>
+                    <div class="dataset-content text-center">
+                        <img src="{{ url_for('vidfeed_dataset', nbr=prs) }}" alt="Dataset Preview" class="img-fluid img-thumbnail rounded">
+                        <div class="mt-4">
+                            <a class="btn btn-primary btn-lg" href="{{ url_for('train_classifier', nbr=prs) }}">Start Training</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <br />
-      <div class="row">
-        <div class="col-md-3 offset-lg-2">
-          <a
-            class="btn btn-warning btn-lg"
-            href="{{ url_for('train_classifier', nbr=prs) }}"
-          >
-            Training
-          </a>
-        </div>
-      </div>
     </section>
-  </body>
+</body>
 </html>

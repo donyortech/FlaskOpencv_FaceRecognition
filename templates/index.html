@@ -1,74 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    {% include "head.html" %}
-    <style>
-      .page-header {
-        margin: -20px -20px 20px;
-        padding: 20px;
-      }
-      .btn-custom {
-        padding: 10px 30px;
-        font-size: 16px;
-      }
-      .table-custom {
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        overflow: hidden;
-      }
-      .table th,
-      .table td {
-        vertical-align: middle;
-      }
-      /* Additional styles for responsiveness */
-      @media (max-width: 768px) {
-        .btn-custom {
-          padding: 5px 15px;
-          font-size: 14px;
-        }
-      }
-    </style>
+    <!-- Replace with your actual head.html content -->
+    <meta charset="UTF-8" />
+    <title>Classroom Attendance System</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="static/css/indexcss.css">
+<!--    <style>-->
+<!--    </style>-->
   </head>
   <body>
-    {% include "navbar.html" %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <img
+            src="{{ url_for('static', filename='img/logo.png') }}"
+            width="70"
+            alt=""
+            class="logo"
+          />
+          Classroom Attendance System
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/personnel_data">Personnel Data</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/addprsn">Add Personnel</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/fr_page">Face Recognition</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-    <section class="container py-5">
-      <div class="row">
-        <div class="col-lg-10 offset-lg-1">
-          <div class="page-header mb-4">
-            <h2>Personnel Data</h2>
+    <!-- Hero Section -->
+    <div class="hero d-flex align-items-center">
+      <div class="container">
+        <div class="row justify-content-center align-items-center">
+          <div class="col-lg-6 col-md-8 text-center">
+            <h1>Welcome to the Classroom Attendance System</h1>
+            <p>
+              An innovative solution for managing classroom attendance through
+              face recognition technology.
+            </p>
+            <a
+              href="#features"
+              class="btn btn-primary mt-4 custom-discover-more"
+              >Discover More</a>
           </div>
-          <!-- <div class="text-center mb-4">
-                <a href="/addprsn" class="btn btn-success btn-custom mr-2"><b>Add Personnel</b></a>
-                <a href="/fr_page" class="btn btn-info btn-custom"><b>Face Recognition</b></a>
-            </div> -->
-
-          <div class="table-responsive">
-            <table class="table table-custom">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">Person Id</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Skill</th>
-                  <th scope="col">Active</th>
-                  <th scope="col">Added</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in data %}
-                <tr>
-                  <td>{{item[0]}}</td>
-                  <td>{{item[1]}}</td>
-                  <td>{{item[2]}}</td>
-                  <td>{{item[3]}}</td>
-                  <td>{{item[4]}}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+          <div class="col-lg-6 col-md-12">
+            <div class="video-wrapper">
+              <video controls autoplay muted loop class="hero-video">
+                <source
+                  src="https://lystloc-landing-page.s3.ap-south-1.amazonaws.com/images/lystface/lytface_banner.m4v"
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+
+<!-- Features Container -->
+<div class="features-section py-5">
+  <div class="container">
+    <div class="section-title text-center mb-5">
+      <h2>Core Features</h2>
+      <div class="bar mx-auto"></div>
+      <p>Explore how our face recognition technology streamlines attendance tracking, offering unparalleled accuracy and ease of use.</p>
+    </div>
+    <div class="row justify-content-center">
+      <!-- Feature 1 -->
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="single-feature p-4 text-center">
+          <div class="icon">
+            <i class="fas fa-user-check fa-3x" style="color: #1abfcb;"></i>
+          </div>
+          <h3>Seamless Attendance Tracking</h3>
+          <p>Automate attendance with our state-of-the-art face recognition technology. Fast, accurate, and reliable.</p>
+        </div>
+      </div>
+      <!-- Feature 2 -->
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="single-feature p-4 text-center">
+          <div class="icon">
+            <i class="fas fa-chart-line fa-3x" style="color: #1abfcb;"></i>
+          </div>
+          <h3>Insightful Analytics</h3>
+          <p>Gain valuable insights from attendance data. Understand patterns, trends, and make informed decisions.</p>
+        </div>
+      </div>
+      <!-- Feature 3 -->
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="single-feature p-4 text-center">
+          <div class="icon">
+            <i class="fas fa-cogs fa-3x" style="color: #1abfcb;"></i>
+          </div>
+          <h3>Effortless Management</h3>
+          <p>Intuitive dashboards and settings make managing your system a breeze. Customize to fit your needs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  Free Demo  -->
+<div class="cta-area landingPage-cta-area">
+  <div class="container">
+    <div class="row h-100 justify-content-center align-items-center">
+      <div class="col-lg-9 col-md-9">
+        <p>So, What are you waiting for? Book your free demo slot right now</p>
+      </div>
+      <div class="col-lg-3 col-md-3 text-right">
+        <a class="custom-demo-btn" href="">FREE DEMO</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!--    About section -->
+    <div class="about-technology" id="about-technology">
+      <div class="container py-5">
+        <h2 class="section-title">About the Technology</h2>
+        <p class="intro-text">
+          Our Classroom Attendance System leverages cutting-edge face
+          recognition technology to provide an efficient and secure way to
+          manage attendance.
+        </p>
+        <div class="row technology-details my-4">
+          <!-- Image Column -->
+          <div class="col-lg-6 mb-3">
+            <div class="tech-image-container text-center">
+              <img
+                src="https://d1dh3fyxod76j3.cloudfront.net/images/lystface/safetouchLystface.webp"
+                alt="Face Recognition Technology"
+                class="tech-image img-fluid rounded"
+              />
+            </div>
+          </div>
+          <!-- Text Column for Steps -->
+          <div class="col-lg-6">
+            <h3>How It Works</h3>
+            <p>
+              Using advanced algorithms, our system quickly and accurately
+              identifies individuals from live video feeds...
+            </p>
+            <!-- Step-by-Step Explanation -->
+            <div class="steps">
+              <div class="step">
+                <h4>Step 1: Real-time Capture</h4>
+                <p>
+                  Our system initiates by capturing live video feeds, utilizing
+                  HD cameras to ensure high-quality image capture for precise
+                  recognition.
+                </p>
+              </div>
+              <div class="step">
+                <h4>Step 2: Facial Detection</h4>
+                <p>
+                  Advanced detection algorithms identify and locate faces within
+                  the video frame, even in crowded settings, to accurately
+                  pinpoint individual attendees.
+                </p>
+              </div>
+              <div class="step">
+                <h4>Step 3: Identity Verification</h4>
+                <p>
+                  Utilizing a pre-established database of authorized
+                  individuals, the system matches detected faces against known
+                  profiles, verifying identities with remarkable speed and
+                  accuracy.
+                </p>
+              </div>
+              <div class="step">
+                <h4>Step 4: Attendance Logging</h4>
+                <p>
+                  Upon successful identification, the system automatically logs
+                  the attendance, updating real-time records and providing
+                  instant feedback on the attendance status.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!--    QR downloader code-->
+    <div
+      id="download-app-qrcode"
+      class="download-app-qrcode"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 372px;
+        right: 12px;
+        width: 100px;
+        padding: 4px;
+        background: #ffffff;
+        box-shadow: 0px 3px 9px 0px rgba(223, 227, 232, 0.5);
+        border-radius: 7px;
+        text-align: center;
+        color: #3a3a45;
+        font-size: 12px;
+        transition: all 0.3s;
+        opacity: 1;
+        transform: translateX(0);
+      "
+    >
+      <img
+        src="/static/img/download-qrcode.jpg"
+        alt="Download App QR Code"
+        style="max-width: 100%; height: auto"
+      />
+      <span>Get APP</span>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const qrCode = document.getElementById("download-app-qrcode");
+        const featuresSection = document.getElementById("features");
+
+        window.onscroll = function () {
+          // Calculate the position of the Features section from the top of the document
+          let featuresPosition =
+            featuresSection.getBoundingClientRect().top + window.scrollY;
+
+          // Show or hide the QR code based on scroll position
+          if (window.scrollY > featuresPosition) {
+            qrCode.style.display = "block";
+          } else {
+            qrCode.style.display = "none";
+          }
+        };
+      });
+    </script>
+
+    <div class="footer bg-dark text-light pt-4">
+      <div class="container">
+        <div class="row">
+          <!-- About Us -->
+          <div class="col-md-4 mb-3">
+            <h5 class="footer-heading">About Us</h5>
+            <p>
+              The Classroom Attendance System is designed to revolutionize
+              attendance tracking through advanced facial recognition
+              technology, making it seamless, accurate, and secure.
+            </p>
+          </div>
+          <!-- Quick Links -->
+          <div class="col-md-4 mb-3">
+            <h5 class="footer-heading">Quick Links</h5>
+            <ul class="list-unstyled footer-links">
+              <li><a href="/" class="footer-link">Home</a></li>
+              <li>
+                <a href="/personnel_data" class="footer-link">Personnel Data</a>
+              </li>
+              <li><a href="/addprsn" class="footer-link">Add Personnel</a></li>
+              <li>
+                <a href="/fr_page" class="footer-link">Face Recognition</a>
+              </li>
+            </ul>
+          </div>
+          <!-- Contact Us -->
+          <div class="col-md-4 mb-3">
+            <h5 class="footer-heading">Contact Us</h5>
+            <p>Have questions or need support? Contact us at:</p>
+            <p>
+              Email:
+              <a href="mailto:donyorgaoli@qq.com.com" class="footer-link"
+                >donyorgaoli@qq.com</a
+              >
+            </p>
+            <p>
+              Phone:
+              <a href="tel:15655507221" class="footer-link">+8615655507221</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-center py-3 bg-dark text-light border-top border-secondary"
+      >
+        ©2024 Classroom Attendance System. All rights reserved.
+      </div>
+    </div>
+
+    <!-- Scripts for Bootstrap and FontAwesome -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/js/all.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>

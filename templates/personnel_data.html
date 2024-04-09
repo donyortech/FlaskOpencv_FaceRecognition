@@ -1,10 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
+  <head>
+    {% include "head.html" %}
+    <style>
+      /* Global Styles */
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f8f9fa; /* Soft background color for the whole page */
+  color: #495057; /* Universal text color for better readability */
+}
+
+/* Section Styling */
+.section-container {
+  padding: 40px 15px; /* Adjusted horizontal padding for inner content spacing */
+  background-color: #ffffff; /* Bright background for the section */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+  border-radius: 15px; /* Rounded corners for modern aesthetics */
+  margin: 20px auto; /* Ensure some margin around the container */
+  max-width: 100%; /* Allows the container to stretch according to the viewport width */
+  box-sizing: border-box; /* Ensures padding is included in the width calculation */
+}
+
+/* Ensure the container and its content are centered and responsive */
+.container {
+  max-width: 1140px; /* Adjust this value based on your design's needs */
+  padding-right: 15px; /* Padding for the right */
+  padding-left: 15px; /* Padding for the left */
+  margin-right: auto; /* Centering */
+  margin-left: auto; /* Centering */
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 960px; /* Adjust container size on smaller screens */
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 720px; /* Further adjust for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .container, .section-container {
+    padding: 40px 20px; /* More padding on very small screens for better readability */
+    max-width: 100%; /* Allows the container to fully expand on small devices */
+    margin: 20px; /* Adjust if needed to ensure consistency */
+    border-radius: 0; /* Optional: removes border-radius on smaller screens for a full-width look */
+  }
+}
+
+.page-header {
+  margin-bottom: 30px; /* Increased space below the header */
+  text-align: center; /* Center-align the header */
+}
+
+.page-header h2 {
+  color: #007bff; /* Heading color to match your primary theme */
+  font-weight: 700; /* Bold font weight for headings */
+}
+
+/* Table Customization */
+.table-custom {
+  margin-top: 20px; /* Space above the table */
+}
+
+.table {
+  background-color: #f9fafb; /* Light background for the table */
+}
+
+.table th {
+  background-color: #007bff; /* Themed header background */
+  color: #ffffff; /* White text for headers */
+}
+
+.table td {
+  border-color: #e9ecef; /* Soft border color for cells */
+}
+
+/* Button Customization */
+.btn {
+  background-color: #17a2b8; /* Matching button color */
+  color: #ffffff; /* White text for buttons */
+  border: none; /* Remove border */
+  transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+
+.btn:hover {
+  background-color: #138496; /* Darken button on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .btn-custom {
+    padding: 8px 20px; /* Adjust padding for smaller screens */
+    font-size: 14px; /* Adjust font size for readability */
+  }
+}
+
+    </style>
+  </head>
+ <body>
+  {% include "navbar.html" %}
+
+  <section class="section-container">
+    <div class="container py-5">
+      <div class="page-header mb-4">
+        <h2>Personnel Data</h2>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-custom">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Person Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Class</th>
+              <th scope="col">Active</th>
+              <th scope="col">Added</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in data %}
+            <tr>
+              <td>{{item[0]}}</td>
+              <td>{{item[1]}}</td>
+              <td>{{item[2]}}</td>
+              <td>{{item[3]}}</td>
+              <td>{{item[4]}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="/export_personal_data" class="btn">Export Personal Data</a>
+      </div>
+    </div>
+  </section>
 </body>
 </html>
