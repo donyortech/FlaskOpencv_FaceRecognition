@@ -10,6 +10,7 @@ from datetime import date
 from flask import send_file
 import pandas as pd
 from io import BytesIO
+import random
 
 app = Flask(__name__)
 
@@ -79,7 +80,6 @@ def generate_dataset(nbr):
                 cap.release()
                 cv2.destroyAllWindows()
 
-
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Train Classifier >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 @app.route('/train_classifier/<nbr>')
 def train_classifier(nbr):
@@ -130,7 +130,29 @@ def export_to_excel():
                      mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                      as_attachment=True, download_name="exported_data.xlsx")
 
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Data Dashboard >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+def get_student_data(student_id):
+    # Example data; replace with database query in a real app
+    return {
+        "id": student_id,
+        "name": "Student " + student_id,
+        "attendance": random.randint(80, 100),
+        "grades": [random.randint(60, 100) for _ in range(5)]
+    }
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/api/student-data/<student_id>')
+def student_data(student_id):
+    data = get_student_data(student_id)
+    return jsonify(data)
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< load Data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Export Personnel Data to excel >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 @app.route('/export_personal_data')
 def export_personal_data():
     query = "SELECT prs_nbr AS 'Person Id', prs_name AS 'Name', prs_skill AS 'Class', prs_active AS 'Active', prs_added AS 'Added' FROM prs_mstr"
