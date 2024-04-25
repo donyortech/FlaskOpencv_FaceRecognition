@@ -1,5 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, \
-    Response, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, Response, jsonify
 import mysql.connector
 import cv2
 from PIL import Image
@@ -26,7 +25,6 @@ mydb = mysql.connector.connect(
 )
 mycursor = mydb.cursor()
 
-
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Generate dataset >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def generate_dataset(nbr):
     face_classifier = cv2.CascadeClassifier(
@@ -35,8 +33,6 @@ def generate_dataset(nbr):
     def face_cropped(img):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = face_classifier.detectMultiScale(gray, 1.3, 5)
-        # scaling factor=1.3
-        # Minimum neighbor = 5
 
         if faces is ():
             return None
@@ -73,12 +69,13 @@ def generate_dataset(nbr):
 
             frame = cv2.imencode('.jpg', face)[1].tobytes()
             yield (
-                        b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
             if cv2.waitKey(1) == 13 or int(img_id) == int(max_imgid):
                 break
-                cap.release()
-                cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
+
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Train Classifier >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 @app.route('/train_classifier/<nbr>')
@@ -105,6 +102,7 @@ def train_classifier(nbr):
 
     return redirect('/')
 
+
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Export Today Scan to excel >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 @app.route('/export_to_excel')
 def export_to_excel():
@@ -125,10 +123,10 @@ def export_to_excel():
     output.seek(0)
 
     # Send the file as a download
-    # Send the file as a download
     return send_file(output,
                      mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                      as_attachment=True, download_name="exported_data.xlsx")
+
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Data Dashboard >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def get_student_data(student_id):
@@ -140,14 +138,17 @@ def get_student_data(student_id):
         "grades": [random.randint(60, 100) for _ in range(5)]
     }
 
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
 
 @app.route('/api/student-data/<student_id>')
 def student_data(student_id):
     data = get_student_data(student_id)
     return jsonify(data)
+
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< load Data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -202,7 +203,6 @@ def face_recognition():  # generate frame by frame from camera
                 cnt += 1
 
                 n = (100 / 30) * cnt
-                # w_filled = (n / 100) * w
                 w_filled = (cnt / 30) * w
 
                 cv2.putText(img, str(int(n)) + ' %', (x + 20, y + h + 28),
@@ -228,15 +228,22 @@ def face_recognition():  # generate frame by frame from camera
                 if int(cnt) == 30:
                     cnt = 0
 
-                    mycursor.execute(
-                        "insert into accs_hist (accs_date, accs_prsn) values('" + str(
-                            date.today()) + "', '" + pnbr + "')")
-                    mydb.commit()
+                    # Check if the person has already been scanned today
+                    today_date = date.today()
+                    mycursor.execute("SELECT COUNT(*) FROM accs_hist WHERE accs_date = %s AND accs_prsn = %s",
+                                     (today_date, pnbr))
+                    count = mycursor.fetchone()[0]
 
-                    cv2.putText(img, pname + ' | ' + pskill, (x - 10, y - 10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (153, 255, 255),
-                                2, cv2.LINE_AA)
-                    time.sleep(1)
+                    if count == 0:  # If the person has not been scanned today
+                        mycursor.execute(
+                            "INSERT INTO accs_hist (accs_date, accs_prsn) VALUES (%s, %s)",
+                            (today_date, pnbr))
+                        mydb.commit()
+
+                        cv2.putText(img, pname + ' | ' + pskill, (x - 10, y - 10),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (153, 255, 255),
+                                    2, cv2.LINE_AA)
+                        time.sleep(1)
 
                     justscanned = True
                     pause_cnt = 0
@@ -290,6 +297,7 @@ def home():
     # Home page with project information
     return render_template('index.html')
 
+
 @app.route('/personnel_data')
 def personnel_data():
     mycursor.execute(
@@ -297,13 +305,13 @@ def personnel_data():
     data = mycursor.fetchall()
 
     return render_template('personnel_data.html', data=data)
+
+
 @app.route('/addprsn')
 def addprsn():
     mycursor.execute("select ifnull(max(prs_nbr) + 1, 101) from prs_mstr")
     row = mycursor.fetchone()
     nbr = row[0]
-    # print(int(nbr))
-
     return render_template('addprsn.html', newnbr=int(nbr))
 
 
@@ -317,7 +325,6 @@ def addprsn_submit():
                     ('{}', '{}', '{}')""".format(prsnbr, prsname, prsskill))
     mydb.commit()
 
-    # return redirect(url_for('home'))
     return redirect(url_for('vfdataset_page', prs=prsnbr))
 
 
@@ -356,14 +363,6 @@ def fr_page():
 
 @app.route('/countTodayScan')
 def countTodayScan():
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        passwd="",
-        database="flask_db"
-    )
-    mycursor = mydb.cursor()
-
     mycursor.execute("select count(*) "
                      "  from accs_hist "
                      " where accs_date = curdate() ")
@@ -375,14 +374,6 @@ def countTodayScan():
 
 @app.route('/loadData', methods=['GET', 'POST'])
 def loadData():
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        passwd="",
-        database="flask_db"
-    )
-    mycursor = mydb.cursor()
-
     mycursor.execute(
         "select a.accs_id, a.accs_prsn, b.prs_name, b.prs_skill, date_format(a.accs_added, '%H:%i:%s') "
         "  from accs_hist a "

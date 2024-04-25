@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     {% include "navbar.html" %}
@@ -15,7 +14,7 @@
     <div class="container py-5">
         <h2>Dashboard</h2>
 
-        <!-- Placeholder for DataTable -->
+        <!-- DataTable for displaying data -->
         <table id="studentDataTable" class="table table-bordered">
             <thead>
                 <tr>
@@ -27,56 +26,29 @@
                 </tr>
             </thead>
             <tbody>
-                   {% for item in data %}
-          <tr>
-            <td>{{item[0]}}</td>
-            <td>{{item[1]}}</td>
-            <td>{{item[2]}}</td>
-            <td>{{item[3]}}</td>
-            <td>{{item[4]}}</td>
-          </tr>
-          {% endfor %}
+                {% for item in data %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
 
-        <!-- Placeholder for Chart.js Chart -->
-        <canvas id="studentGradeChart"></canvas>
+        <!-- Button for exporting data to Excel -->
+        <button id="exportExcelBtn" class="btn btn-primary">Export to Excel</button>
 
-        <!-- Script to load DataTable and Chart.js chart -->
+        <!-- Script to initialize the DataTable -->
         <script>
             $(document).ready(function() {
                 $('#studentDataTable').DataTable();
 
-                // Assume you have a way to select or know the student ID
-                var studentId = '1'; // Example student ID
-                $.ajax({
-                    url: '/api/student-data/' + studentId,
-                    type: 'GET',
-                    success: function(response) {
-                        var ctx = document.getElementById('studentGradeChart').getContext('2d');
-                        var chart = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: ['Math', 'Science', 'History', 'English', 'Art'],
-                                datasets: [{
-                                    label: 'Grades',
-                                    data: response.grades,
-                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                    borderColor: 'rgba(54, 162, 235, 1)',
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    yAxes: [{
-                                        ticks: {
-                                            beginAtZero: true
-                                        }
-                                    }]
-                                }
-                            }
-                        });
-                    }
+                // Handling click event for the Export to Excel button
+                $('#exportExcelBtn').click(function() {
+                    window.location.href = '/export_personal_data';
                 });
             });
         </script>

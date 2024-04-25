@@ -1,149 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     {% include "head.html" %}
-    <style>
-      body {
-        background-color: #f8f9fa;
-        font-family: "Arial", sans-serif;
-      }
-      .container-fluid {
-        padding-top: 20px;
-      }
-      .img-thumbnail {
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      h3 {
-        color: #333;
-        font-size: 24px;
-        margin-bottom: 20px;
-      }
-      .table {
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-      thead th {
-        background-color: #007bff;
-        color: #ffffff;
-      }
-      tbody tr:hover {
-        background-color: #f0f0f0;
-      }
-      /* Scrollbar Styles */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #888;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
-    </style>
-  </head>
-  <body>
+</head>
+<body>
     {% include "navbar.html" %}
 
-    <div class="container-fluid">
-      <div class="row mt-5 mb-5">
-        <div class="col-md-7">
-          <img
-            src="{{ url_for('video_feed') }}"
-            width="90%"
-            class="img-thumbnail"
-          />
+    <div class="container-fluid mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-7">
+                <img src="{{ url_for('video_feed') }}" class="img-thumbnail w-100" />
+            </div>
+            <div class="col-md-5">
+                <h3 class="text-secondary">Today Scan</h3>
+                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                    <table class="table table-hover shadow">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Person #</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Class</th>
+                                <th scope="col">Added</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scandata">
+                            <!-- Data loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <a href="/export_to_excel" class="btn btn-primary mt-2">Export to Excel</a>
+            </div>
         </div>
-        <div class="col-md-4" style="height: 500px; overflow-y: auto">
-          <h3>Today Scan</h3>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Person #</th>
-                <th>Name</th>
-                <th>Class</th>
-                <th>Added</th>
-              </tr>
-            </thead>
-            <tbody id="scandata">
-              <!-- Data loaded dynamically -->
-            </tbody>
-          </table>
-          <a href="/export_to_excel" class="btn btn-primary">Export to Excel</a>
-
-        </div>
-      </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        let lastcnt = 0;
-        let cnt;
-        chkNewScan();
+    <script>
+        $(document).ready(function () {
+            let lastCnt = 0;
+            function checkNewScan() {
+                $.ajax({
+                    url: "/countTodayScan",
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.rowcount > lastCnt) {
+                            lastCnt = data.rowcount;
+                            reloadData();
+                        }
+                    },
+                    error: function () {
+                        console.log("Error fetching scan count");
+                    },
+                });
+                setTimeout(checkNewScan, 1000);
+            }
 
-        function chkNewScan() {
-          countTodayScan();
-          setTimeout(chkNewScan, 1000);
-        }
+            function reloadData() {
+                $.ajax({
+                    url: "/loadData",
+                    type: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        var tbody = $("#scandata");
+                        tbody.empty();
+                        $.each(response.response, function (index, item) {
+                            tbody.append(`<tr><td>${item[1]}</td><td>${item[2]}</td><td>${item[3]}</td><td>${item[4]}</td></tr>`);
+                        });
+                    },
+                    error: function () {
+                        console.log("Error reloading data");
+                    },
+                });
+            }
 
-        function countTodayScan() {
-          $.ajax({
-            url: "/countTodayScan",
-            type: "GET",
-            dataType: "json",
-            success: function (data) {
-              cnt = data.rowcount;
-              if (cnt > lastcnt) {
-                reloadTable();
-              }
-
-              lastcnt = cnt;
-            },
-            error: function (result) {
-              console.log("no result!");
-            },
-          });
-        }
-
-        function reloadTable() {
-          $.ajax({
-            url: "/loadData",
-            type: "GET",
-            dataType: "json",
-            success: function (response) {
-              var tr = $("#scandata");
-              tr.empty();
-
-              $.each(response.response, function (index, item) {
-                tr.append(
-                  "<tr>" +
-                    "<td>" +
-                    item[1] +
-                    "</td>" +
-                    "<td>" +
-                    item[2] +
-                    "</td>" +
-                    "<td>" +
-                    item[3] +
-                    "</td>" +
-                    "<td>" +
-                    item[4] +
-                    "</td>" +
-                    "</tr>"
-                );
-              });
-            },
-            error: function (result) {
-              console.log("no result!");
-            },
-          });
-        }
-      });
+            checkNewScan();
+        });
     </script>
-  </body>
+</body>
 </html>
